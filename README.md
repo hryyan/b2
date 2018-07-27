@@ -8,8 +8,7 @@
 
 ## What is b2?
 
-![Alt text](https://raw.githubusercontent.com/hryyan/b2/master/doc/intro.svg?sanitize=true)
-<img src="https://raw.githubusercontent.com/hryyan/b2/master/doc/intro.svg?sanitize=true">
+![Alt text](./doc/intro.svg)
 
 ## What can I do with b2?
 
