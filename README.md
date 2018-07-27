@@ -8,7 +8,7 @@
 
 ## What is b2?
 
-![](doc/intro.svg)
+![](doc/simple.svg)
 
 ## What can I do with b2?
 
