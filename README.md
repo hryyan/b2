@@ -8,7 +8,7 @@
 
 ## What is b2?
 
-<img src="/doc/intro.svg">
+<img src="https://raw.githubusercontent.com/hryyan/b2/master/doc/intro.svg">
 
 ## What can I do with b2?
 
