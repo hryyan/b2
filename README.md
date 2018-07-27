@@ -8,7 +8,7 @@
 
 ## What is b2?
 
-![Alt text](./doc/intro.svg)
+![](doc/intro.svg)
 
 ## What can I do with b2?
 
