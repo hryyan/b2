@@ -8,7 +8,7 @@
 
 ## What is b2?
 
-![](doc/simple.svg)
+![](https://cdn.rawgit.com/hryyan/b2/master/doc/intro.svg)
 
 ## What can I do with b2?
 
