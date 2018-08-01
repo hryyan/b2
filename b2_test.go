@@ -110,9 +110,11 @@ func (t *FileTests) TestSmallFile() {
 
 	var uploaded int64 = 0
 	var fileSize int64 = 0
+	var mutex = &sync.Mutex{}
 	go func() {
 		var percent float64
 		for {
+			mutex.Lock()
 			switch {
 			case fileSize == 0:
 			case uploaded != fileSize:
@@ -120,14 +122,18 @@ func (t *FileTests) TestSmallFile() {
 				log.Printf("Upload %.2f%%.\n", percent*100)
 			case uploaded == fileSize:
 				log.Println("Upload 100%.")
+				mutex.Unlock()
 				return
 			}
+			mutex.Unlock()
 			time.Sleep(100 * time.Millisecond)
 		}
 	}()
 	// upload file1 version1
 	fileV1, err := b2.UploadFile(uploadUrlToken, FILE, func(done int64, total int64) {
+		mutex.Lock()
 		uploaded, fileSize = done, total
+		mutex.Unlock()
 	})
 	if err != nil {
 		log.Println(err.Error())
@@ -161,6 +167,7 @@ func (t *FileTests) TestSmallFile() {
 	go func() {
 		var percent float64
 		for {
+			mutex.Lock()
 			switch {
 			case fileSize == 0:
 			case uploaded != fileSize:
@@ -168,14 +175,18 @@ func (t *FileTests) TestSmallFile() {
 				log.Printf("Upload %.2f%%.\n", percent*100)
 			case uploaded == fileSize:
 				log.Println("Upload 100%.")
+				mutex.Unlock()
 				return
 			}
+			mutex.Unlock()
 			time.Sleep(100 * time.Millisecond)
 		}
 	}()
 	// upload file1 version2
 	fileV2, err := b2.UploadFile(uploadUrlToken, FILE, func(done int64, total int64) {
+		mutex.Lock()
 		uploaded, fileSize = done, total
+		mutex.Unlock()
 	})
 	if err != nil {
 		log.Println(err.Error())
@@ -412,9 +423,11 @@ func (t *FileTests) TestLargeFile() {
 		// upload part
 		var uploaded int64 = 0
 		var fileSize int64 = 0
+		var mutex = &sync.Mutex{}
 		go func() {
 			var percent float64
 			for {
+				mutex.Lock()
 				switch {
 				case fileSize == 0:
 				case uploaded != fileSize:
@@ -422,14 +435,18 @@ func (t *FileTests) TestLargeFile() {
 					log.Printf("Upload %.2f%%.\n", percent*100)
 				case uploaded == fileSize:
 					log.Println("Upload 100%.")
+					mutex.Unlock()
 					return
 				}
+				mutex.Unlock()
 				time.Sleep(100 * time.Millisecond)
 			}
 		}()
 
 		part1ContentSha1, err := b2.UploadPart(uploadUrlToken, FILE, 0, 5000000, 1, func(done int64, total int64) {
+			mutex.Lock()
 			uploaded, fileSize = done, total
+			mutex.Unlock()
 		})
 		if err != nil {
 			log.Println(err.Error())
@@ -442,6 +459,7 @@ func (t *FileTests) TestLargeFile() {
 		go func() {
 			var percent float64
 			for {
+				mutex.Lock()
 				switch {
 				case fileSize == 0:
 				case uploaded != fileSize:
@@ -449,14 +467,18 @@ func (t *FileTests) TestLargeFile() {
 					log.Printf("Upload %.2f%%.\n", percent*100)
 				case uploaded == fileSize:
 					log.Println("Upload 100%.")
+					mutex.Unlock()
 					return
 				}
+				mutex.Unlock()
 				time.Sleep(100 * time.Millisecond)
 			}
 		}()
 
 		part2ContentSha1, err := b2.UploadPart(uploadUrlToken, FILE, 5000000, 10000000, 2, func(done int64, total int64) {
+			mutex.Lock()
 			uploaded, fileSize = done, total
+			mutex.Unlock()
 		})
 		if err != nil {
 			log.Println(err.Error())
@@ -490,6 +512,7 @@ func (t *FileTests) TestLargeFile() {
 		go func() {
 			var percent float64
 			for {
+				mutex.Lock()
 				switch {
 				case fileSize == 0:
 				case downloaded != fileSize:
@@ -497,8 +520,10 @@ func (t *FileTests) TestLargeFile() {
 					log.Printf("Download %.2f%%.\n", percent*100)
 				case downloaded == fileSize:
 					log.Println("Download 100%.")
+					mutex.Unlock()
 					return
 				}
+				mutex.Unlock()
 				time.Sleep(100 * time.Millisecond)
 			}
 		}()
@@ -508,7 +533,9 @@ func (t *FileTests) TestLargeFile() {
 
 		if err = b2.DownloadFileByName(bucket.BucketName, file.FileName, fileName,
 			true, func(done int64, total int64) {
+				mutex.Lock()
 				downloaded, fileSize = done, total
+				mutex.Unlock()
 			}); err != nil {
 			log.Println(err.Error())
 			t.Test.Fatal("Download large file failed(by file name!)")
@@ -560,9 +587,11 @@ func (t *FileTests) TestLargeFile() {
 		// upload part
 		var uploaded int64 = 0
 		var fileSize int64 = 0
+		var mutex = &sync.Mutex{}
 		go func() {
 			var percent float64
 			for {
+				mutex.Lock()
 				switch {
 				case fileSize == 0:
 				case uploaded != fileSize:
@@ -570,14 +599,18 @@ func (t *FileTests) TestLargeFile() {
 					log.Printf("Upload %.2f%%.\n", percent*100)
 				case uploaded == fileSize:
 					log.Println("Upload 100%.")
+					mutex.Unlock()
 					return
 				}
+				mutex.Unlock()
 				time.Sleep(100 * time.Millisecond)
 			}
 		}()
 		_, err = b2.UploadPart(uploadUrlToken, FILE, 0, 5000000,
 			1, func(done int64, total int64) {
+				mutex.Lock()
 				uploaded, fileSize = done, total
+				mutex.Unlock()
 			})
 		if err != nil {
 			log.Println(err.Error())
