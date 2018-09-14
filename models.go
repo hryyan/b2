@@ -32,13 +32,32 @@ type Bucket struct {
 const PUBLIC = "allPublic"
 const PRIVATE = "allPrivate"
 
+// Capability
+const LIST_KEYS = "listKeys"
+const WRITE_KEYS = "writeKeys"
+const DELETE_KEYS = "deleteKeys"
+const LIST_BUCKETS = "listBuckets"
+const WRITE_BUCKETS = "writeBuckets"
+const DELETE_BUCKETS = "deleteBuckets"
+const LIST_FILES = "listFiles"
+const READ_FILES = "readFiles"
+const SHARE_FILES = "shareFiles"
+const WRITE_FILES = "writeFiles"
+const DELETE_FILES = "deleteFiles"
+
 type ApplicationKey struct {
 	ApplicationKeyId    string   `json:"applicationKeyId"`
+	ApplicationKey      string   `json:"applicationKey"`
 	KeyName             string   `json:"keyName"`
 	Capabilities        []string `json:"capabilities"`
-	ExpirationTimestamp int64    `json:"expirationTimestamp"`
-	BucketId            string   `json:"bucketId"`
-	NamePrefix          string   `json:"namePrefix"`
+	ExpirationTimestamp int64    `json:"expirationTimestamp,omitempty"`
+	BucketId            string   `json:"bucketId,omitempty"`
+	NamePrefix          string   `json:"namePrefix,omitempty"`
+}
+
+type ApplicationKeys struct {
+	Keys                 []*ApplicationKey `json:"keys"`
+	NextApplicationKeyId string            `json:"nextApplicationKeyId,omitempty"`
 }
 
 type FileInfo map[string]interface{}

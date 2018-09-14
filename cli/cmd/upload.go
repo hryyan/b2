@@ -182,7 +182,7 @@ var uploadFileCmd = &cobra.Command{
 		}
 
 		if len(buckets) != 1 {
-			fmt.Println("Can not find bucket %s!\n", bucketName)
+			fmt.Printf("Can not find bucket %s!\n", bucketName)
 			os.Exit(OPERATION_ERROR_EXIT)
 		}
 

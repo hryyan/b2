@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"math/rand"
 	"os"
 	"sync"
 	"testing"
@@ -646,15 +645,34 @@ func (t *FileTests) TestLargeFile() {
 	}
 }
 
-const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-
-func randName(length int64) string {
-	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
-	b := make([]byte, length)
-	for i := range b {
-		b[i] = charset[seededRand.Intn(len(charset))]
+func TestKey(t *testing.T) {
+	ak, err := b2.CreateKey([]string{LIST_KEYS}, "testKey", 0, "", "")
+	if err != nil {
+		log.Println(err.Error())
+		t.Fatal("Create key failed!")
+	} else {
+		log.Println("Create key successed!")
 	}
-	return string(b)
+
+	aks, err := b2.ListKeys(0, "")
+	if err != nil {
+		log.Println(err.Error())
+		t.Fatal("List keys failed!")
+	} else {
+		if len(aks.Keys) == 1 {
+			log.Println("List keys successed!")
+		} else {
+			t.Fatalf("Should see only one key, return %d keys.\n", len(aks.Keys))
+		}
+	}
+
+	err = b2.DeleteKey(ak)
+	if err != nil {
+		log.Println(err.Error())
+		t.Fatal("Delete key failed!")
+	} else {
+		log.Println("Delete key successed")
+	}
 }
 
 func TestFile(t *testing.T) {
@@ -663,10 +681,6 @@ func TestFile(t *testing.T) {
 		test.TestSmallFile()
 		test.TestLargeFile()
 	})
-}
-
-func getKeyFromEnv() (string, string) {
-	return os.Getenv("B2_ACCOUNT_ID"), os.Getenv("B2_APPLICATION_KEY")
 }
 
 func setup() {
